@@ -11,13 +11,19 @@ public class GhostMove : MonoBehaviour {
     Vector2 dir = Vector2.up;
 
 
+    public static GameManager gameManager = null;
+
+
     // Use this for initialization
-    void Start () {
+    void Awake () {
         dest = transform.position;
+        if(gameManager == null)
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        //if(gameManager.myState 
         target = (Vector2)playerTrans.position;
         //Move closer to Destination
         

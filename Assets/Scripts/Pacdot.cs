@@ -8,7 +8,6 @@ public class Pacdot : MonoBehaviour {
             //Increase High Score.
             //TODO: Invisible not destroy
             GameManager.instance.SendMessage("EatDot");
-            Debug.Log("Child Count =" + this.transform.parent.childCount);
             this.gameObject.SetActive(false);
             //Destroy(gameObject);
         }
