@@ -28,7 +28,7 @@ public class GhostMove3D : MonoBehaviour {
         //if(gameManager.myState 
         m_target = m_playerTrans.position;
         //Move closer to Destination
-        
+
         Vector3 p = Vector3.MoveTowards(transform.position, m_dest, m_speed);
         GetComponent<Rigidbody>().MovePosition(p);
 
@@ -38,7 +38,7 @@ public class GhostMove3D : MonoBehaviour {
             //If up isn't going backwards, AND its valid)
             if (Vector3.up != (m_dir.normalized * -1) && Valid(Vector3.up)) {
                 //If up isn't going backwards, AND its valid)
-                m_dest =  transform.position + Vector3.up;
+                m_dest = transform.position + Vector3.up;
             }
             if (Vector3.right != (m_dir.normalized * -1) && Valid(Vector3.right)) {
                 //if Dest was set by the statement above, then we need to compare
@@ -85,10 +85,11 @@ public class GhostMove3D : MonoBehaviour {
         /// had to add the (or if its not the maze) because boolean logic, but it works.
         /// So this ghost will run through anything that isn't the maze, including pac-man and the ghosts
         //if (hit.collider != null) {
-            //Debug.Log("Valid return = " + (hit.collider != null) + ", name = " + hit.transform.name);
+        //Debug.Log("Valid return = " + (hit.collider != null) + ", name = " + hit.transform.name);
         //}
         return (hit.collider == null /*&& hit.collider.name != "maze"*/);
     }
+
     Vector3 ReturnClosest(Vector3 target, Vector3 choice1, Vector3 choice2) {
         if (choice1 == null) {
             return choice2;

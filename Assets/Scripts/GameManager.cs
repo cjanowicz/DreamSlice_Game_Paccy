@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
 
     public enum State { Game, Dead, Menu, Complete };
     public State myState = State.Game;
-    public enum GhostState { Chase , Avoid, SpreadOut };
+    public enum GhostState { Chase, Avoid, SpreadOut };
     public GhostState m_ghostState = GhostState.Chase;
 
     public static GameManager instance = null;
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
 
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
-        
+
         /*
         //Get a component reference to the attached BoardManager script
         boardScript = GetComponent<BoardManager>();
@@ -62,16 +62,16 @@ public class GameManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
+    void Start() {
+
+    }
+
+    // Update is called once per frame
+    void FixedUpdate() {
 
         m_waveTimer += Time.deltaTime;
 
-        if(m_waveTimer >= m_waveLengthTime) {
+        if (m_waveTimer >= m_waveLengthTime) {
             /// mess with ghost State
             if (m_ghostState == GhostState.Chase)
                 m_ghostState = GhostState.SpreadOut;
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour {
         totalScore += dotScore;
         scoreText.text = totalScore.ToString();
         dotsRemaining--;
-        if(dotsRemaining <= 0) {
+        if (dotsRemaining <= 0) {
             Debug.Log("All Dots Eaten");
             ///level complete!
             myState = State.Complete;

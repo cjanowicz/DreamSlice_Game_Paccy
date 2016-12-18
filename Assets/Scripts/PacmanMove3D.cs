@@ -44,9 +44,15 @@ public class PacmanMove3D : MonoBehaviour {
                 //Going off a ledge
                 //print("No Floor Detected ");
 
+                //Move Down
                 m_dest = transform.position + (transform.up * -1);
 
-                transform.LookAt(transform.position + Vector3.up, m_direction);
+                if (m_direction != Vector3.up && m_direction * -1 != Vector3.up) {
+                    //Change the orientation to be world up, but where transform up is set to whatever direction we were last going in
+                    transform.LookAt(transform.position + Vector3.up, m_direction);
+                } else {
+                    transform.LookAt(transform.position + Vector3.forward, m_direction);
+                }
                 //Debug.Log("pos  = " + transform.position + ", up*-1 = " + (transform.up * -1) + ", dir = " + m_direction + ", m_dest = " + m_dest);
             }
 
@@ -65,8 +71,8 @@ public class PacmanMove3D : MonoBehaviour {
         if (Physics.Raycast(pos, dir, out hit, 1.0f)) {
             //print("Found an object - distance: " + hit.distance + ", name is " + hit.collider.tag);
             return (hit.collider.tag != "Wall");
-        } else { 
-            
+        } else {
+
             return true;
         }
     }
