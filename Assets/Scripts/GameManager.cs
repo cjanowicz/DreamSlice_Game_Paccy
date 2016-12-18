@@ -13,9 +13,15 @@ public class GameManager : MonoBehaviour {
 
     public enum State { Game, Dead, Menu, Complete };
     public State myState = State.Game;
+    public enum GhostState { Chase , Avoid, SpreadOut };
+    public GhostState m_ghostState = GhostState.Chase;
 
     public static GameManager instance = null;
 
+    public Transform mazeContainer;
+
+    private float m_waveTimer = 0.0f;
+    public float m_waveLengthTime = 30f;
 
     //Awake is always called before any Start functions
     void Awake() {
@@ -40,15 +46,19 @@ public class GameManager : MonoBehaviour {
         //Call the InitGame function to initialize the first level 
         InitGame();*/
 
-        
+        //scoreText = textObject.GetComponent<Text>();
 
-        scoreText = textObject.GetComponent<Text>();
-
-        for(int i = 0; i < dotContainer.transform.childCount; i++) {
+        /*for(int i = 0; i < dotContainer.transform.childCount; i++) {
             if(dotContainer.transform.GetChild(i).gameObject.activeInHierarchy == true) {
                 dotsRemaining++;
             }
         }
+
+        foreach (Collider c in mazeContainer.gameObject.GetComponentsInChildren<Collider>()) {
+            c.enabled = false;
+        }
+       */
+
     }
 
     // Use this for initialization
@@ -57,9 +67,20 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
+	void FixedUpdate () {
+
+        m_waveTimer += Time.deltaTime;
+
+        if(m_waveTimer >= m_waveLengthTime) {
+            /// mess with ghost State
+            if (m_ghostState == GhostState.Chase)
+                m_ghostState = GhostState.SpreadOut;
+            else if (m_ghostState == GhostState.SpreadOut)
+                m_ghostState = GhostState.Chase;
+
+            m_waveTimer = 0f;
+        }
+    }
 
     void EatDot() {
         totalScore += dotScore;
@@ -74,4 +95,22 @@ public class GameManager : MonoBehaviour {
     void PlayerDead() {
         myState = State.Dead;
     }
+
+    /*
+     public void SetAllCollidersStatus (bool active) {
+     foreach(Collider c in GetComponents<Collider> ()) {
+         c.enabled = active
+     }
+ }
+
+    OR 
+
+    public void DisableBearColliders()
+ {
+     foreach (Collider c in GetComponentInChildren<Collider>())
+     {
+         c.enabled = false;
+     }
+ }
+ */
 }

@@ -3,13 +3,14 @@ using System.Collections;
 
 public class GhostMove : MonoBehaviour {
 
+    public LayerMask dots;
+
     public float speed = 0.3f;
     Vector2 dest = Vector2.zero;
     public Transform playerTrans;
     Vector2 target = Vector2.zero;
     //I need Vector2 Dir to have lasting effect
     Vector2 dir = Vector2.up;
-
 
     public static GameManager gameManager = null;
 
@@ -23,8 +24,13 @@ public class GhostMove : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        //if(gameManager.myState 
-        target = (Vector2)playerTrans.position;
+
+
+
+
+
+    //if(gameManager.myState 
+    target = (Vector2)playerTrans.position;
         //Move closer to Destination
         
 
@@ -33,6 +39,7 @@ public class GhostMove : MonoBehaviour {
         
         //If we've reached a node
         if ((Vector2)transform.position == dest) {
+
             //If up isn't going backwards, AND its valid)
             if (Vector2.up != (dir.normalized * -1) && Valid(Vector2.up)) {
                 //If up isn't going backwards, AND its valid)
@@ -76,11 +83,18 @@ public class GhostMove : MonoBehaviour {
     bool Valid(Vector2 dir) {
         // Cast Line from 'next to Pac-Man' to 'Pac-Man'
         Vector2 pos = transform.position;
-        RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
+        Debug.Log("dir for this call of Valid = " + dir);
+        
+        RaycastHit2D hit = Physics2D.CircleCast(pos, 0.2f, dir, 1f,dots);
+        Debug.DrawLine(pos, pos + dir);
+        //RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
         /// If the hit's collider is a collider 2D, then don't move basically.
         /// had to add the (or if its not the maze) because boolean logic, but it works.
         /// So this ghost will run through anything that isn't the maze, including pac-man and the ghosts
-        return (hit.collider == GetComponent<Collider2D>() || hit.collider.name != "maze");
+        if (hit.collider != null) {
+            Debug.Log("Valid return = " + (hit.collider != null) + ", name = " + hit.transform.name);
+        }
+        return (hit.collider == null /*&& hit.collider.name != "maze"*/);
     }
     Vector2 ReturnClosest(Vector2 target, Vector2 choice1, Vector2 choice2) {
         if(choice1 == null) {

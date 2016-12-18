@@ -2,14 +2,18 @@
 using System.Collections;
 
 public class Pacdot : MonoBehaviour {
+
+
     
 	void OnTriggerEnter2D(Collider2D co) {
-        if(co.name == "pacman") {
-            //Increase High Score.
-            //TODO: Invisible not destroy
-            GameManager.instance.SendMessage("EatDot");
-            this.gameObject.SetActive(false);
-            //Destroy(gameObject);
+        if(this.gameObject.layer != 8) { 
+            if(co.name == "pacman") {
+                //Increase High Score.
+                //TODO: Invisible not destroy
+                GameManager.instance.SendMessage("EatDot");
+                this.gameObject.SetActive(false);
+                //Destroy(gameObject);
+            }
         }
     }
 
