@@ -23,7 +23,7 @@ public class PacmanMove3D : MonoBehaviour {
 
     void Move() {
 
-        Debug.DrawLine(transform.position, transform.position + m_direction * 20);
+        //Debug.DrawLine(transform.position, transform.position + m_direction * 20);
 
         if (transform.position == m_dest) {
 
@@ -40,18 +40,26 @@ public class PacmanMove3D : MonoBehaviour {
                 if (Input.GetKey(KeyCode.LeftArrow) && Valid(transform.right * -1f))
                     m_dest = transform.position + transform.right * -1f;
             } else {
-                //Going off a ledge
+                ///Going off a ledge
                 //print("No Floor Detected ");
-
-                //Move Down
+                ///Move Down
                 m_dest = transform.position + (transform.up * -1);
 
+                ///Change Directions
+                Vector3 perpendicular = Vector3.Cross(transform.up, m_direction);
+                Debug.Log("position = " + transform.position);
+                Debug.Log("Perpendicular Vector = " + perpendicular + ", m_dir = " + m_direction + ", transform.up = " + transform.up);
+
+                transform.Rotate(perpendicular, 90, Space.World);
+
+                /*
                 if (m_direction != Vector3.up && m_direction * -1 != Vector3.up) {
-                    //Change the orientation to be world up, but where tr                xansform up is set to whatever direction we were last going in
+                    //Change the orientation to be world up, but where tr                transform up is set to whatever direction we were last going in
                     transform.LookAt(transform.position + Vector3.up, m_direction);
                 } else {
                     transform.LookAt(transform.position + Vector3.forward, m_direction);
                 }
+                */
                 //Debug.Log("pos  = " + transform.position + ", up*-1 = " + (transform.up * -1) + ", dir = " + m_direction + ", m_dest = " + m_dest);
             }
 
