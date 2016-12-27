@@ -3,15 +3,16 @@ using System.Collections;
 
 public class Pacdot : MonoBehaviour {
 
-
+    public LayerMask m_EnemiesLayer;
     
-	void OnTriggerEnter2D(Collider2D co) {
-        if(this.gameObject.layer != 8) { 
-            if(co.name == "pacman") {
+	void OnTriggerEnter(Collider co) {
+        /// NOTE: Need to set layermask as defined
+        if(this.gameObject.layer != m_EnemiesLayer) { 
+            if(co.tag == "Player") {
                 //Increase High Score.
                 //TODO: Invisible not destroy
-                GameManager.instance.SendMessage("EatDot");
                 this.gameObject.SetActive(false);
+                GameManager.instance.SendMessage("EatDot");
                 //Destroy(gameObject);
             }
         }

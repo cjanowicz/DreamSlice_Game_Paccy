@@ -11,7 +11,7 @@ public class GhostMove3D : MonoBehaviour {
     public Transform m_playerTrans;
     Vector3 m_target = Vector3.zero;
     //I need Vector3 Dir to have lasting effect
-    Vector3 m_dir = Vector3.up;
+    Vector3 m_dir = Vector3.forward;
 
     public static GameManager m_gameManager = null;
 
@@ -35,35 +35,59 @@ public class GhostMove3D : MonoBehaviour {
         //If we've reached a node
         if (transform.position == m_dest) {
 
-            //If up isn't going backwards, AND its valid)
-            if (Vector3.up != (m_dir.normalized * -1) && Valid(Vector3.up)) {
+            Vector3 pos = transform.position;
+            RaycastHit hit;
+
+            if (Physics.Raycast(pos, transform.up * -1, out hit, 1.0f, m_wallLayer)) {
+
                 //If up isn't going backwards, AND its valid)
-                m_dest = transform.position + Vector3.up;
+                if (transform.forward != (m_dir * -1) && Valid(transform.forward)) {
+                    //If up isn't going backwards, AND its valid)
+                    m_dest = transform.position + transform.forward;
+                }
+                if (transform.right != (m_dir * -1) && Valid(transform.right)) {
+                    //if Dest was set by the statement above, then we need to compare
+                    if (m_dest != transform.position)
+                        m_dest = ReturnClosest(m_target, transform.position + transform.right, m_dest);
+                    //else, we should just set it to this one
+                    else
+                        m_dest = transform.position + transform.right;
+                }
+                Vector3 back = transform.forward * -1;
+                if (back != (m_dir * -1) && Valid(back)) {
+                    if (m_dest != transform.position)
+                        m_dest = ReturnClosest(m_target, transform.position + back, m_dest);
+                    else
+                        m_dest = transform.position + back;
+                }
+                Vector3 left = transform.right * -1;
+                if (left != (m_dir * -1) && Valid(left)) {
+                    if (m_dest != transform.position)
+                        m_dest = ReturnClosest(m_target, transform.position + left, m_dest);
+                    else
+                        m_dest = transform.position + left;
+                }
+
+            } else {
+                //Going off a ledge
+                //print("No Floor Detected ");
+
+                //Move Down
+                m_dest = transform.position + (transform.up * -1);
+
+                if (m_dir != Vector3.up && m_dir * -1 != Vector3.up) {
+                    //Change the orientation to be world up, but where transform up is set to whatever direction we were last going in
+                    transform.LookAt(transform.position + Vector3.up, m_dir);
+                } else {
+                    transform.LookAt(transform.position + Vector3.forward, m_dir);
+                }
+                //Debug.Log("pos  = " + transform.position + ", up*-1 = " + (transform.up * -1) + ", dir = " + m_direction + ", m_dest = " + m_dest);
             }
-            if (Vector3.right != (m_dir.normalized * -1) && Valid(Vector3.right)) {
-                //if Dest was set by the statement above, then we need to compare
-                if (m_dest != transform.position)
-                    m_dest = ReturnClosest(m_target, transform.position + Vector3.right, m_dest);
-                //else, we should just set it to this one
-                else
-                    m_dest = transform.position + Vector3.right;
-            }
-            if (Vector3.down != (m_dir.normalized * -1) && Valid(Vector3.down)) {
-                if (m_dest != transform.position)
-                    m_dest = ReturnClosest(m_target, transform.position + Vector3.down, m_dest);
-                else
-                    m_dest = transform.position + Vector3.down;
-            }
-            if (Vector3.left != (m_dir.normalized * -1) && Valid(Vector3.left)) {
-                if (m_dest != transform.position)
-                    m_dest = ReturnClosest(m_target, transform.position + Vector3.left, m_dest);
-                else
-                    m_dest = transform.position + Vector3.left;
-            }
+
         }
         //Debug.Log("Dest = " + dest + ", dir = " + dir);
         // Animation
-        m_dir = m_dest - transform.position;
+        m_dir = (m_dest - transform.position).normalized;
         GetComponent<Animator>().SetFloat("DirX", m_dir.x);
         GetComponent<Animator>().SetFloat("DirY", m_dir.y);
     }
@@ -79,7 +103,6 @@ public class GhostMove3D : MonoBehaviour {
         //Debug.Log("dir for this call of Valid = " + dir);
         RaycastHit hit;
         Physics.SphereCast(pos, 0.2f, dir, out hit, 1f, m_wallLayer);
-        Debug.DrawLine(pos, pos + dir);
         //RaycastHit hit = Physics.Linecast(pos + dir, pos);
         /// If the hit's collider is a collider , then don't move basically.
         /// had to add the (or if its not the maze) because boolean logic, but it works.
