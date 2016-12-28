@@ -69,19 +69,10 @@ public class GhostMove3D : MonoBehaviour {
                 }
 
             } else {
-                //Going off a ledge
-                //print("No Floor Detected ");
 
-                //Move Down
                 m_dest = transform.position + (transform.up * -1);
-
-                if (m_dir != Vector3.up && m_dir * -1 != Vector3.up) {
-                    //Change the orientation to be world up, but where transform up is set to whatever direction we were last going in
-                    transform.LookAt(transform.position + Vector3.up, m_dir);
-                } else {
-                    transform.LookAt(transform.position + Vector3.forward, m_dir);
-                }
-                //Debug.Log("pos  = " + transform.position + ", up*-1 = " + (transform.up * -1) + ", dir = " + m_direction + ", m_dest = " + m_dest);
+                Vector3 perpendicular = Vector3.Cross(transform.up, m_dir);
+                transform.Rotate(perpendicular, 90, Space.World);
             }
 
         }

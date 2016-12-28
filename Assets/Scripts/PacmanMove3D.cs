@@ -22,14 +22,10 @@ public class PacmanMove3D : MonoBehaviour {
     }
 
     void Move() {
-
-        //Debug.DrawLine(transform.position, transform.position + m_direction * 20);
-
+        
         if (transform.position == m_dest) {
-
             Vector3 pos = transform.position;
             RaycastHit hit;
-
             if (Physics.Raycast(pos, transform.up * -1, out hit, 1.0f, m_wallLayer)) {
                 if (Input.GetKey(KeyCode.UpArrow) && Valid(transform.forward))
                     m_dest = transform.position + transform.forward;
@@ -41,31 +37,13 @@ public class PacmanMove3D : MonoBehaviour {
                     m_dest = transform.position + transform.right * -1f;
             } else {
                 ///Going off a ledge
-                //print("No Floor Detected ");
                 ///Move Down
                 m_dest = transform.position + (transform.up * -1);
-
-                ///Change Directions
                 Vector3 perpendicular = Vector3.Cross(transform.up, m_direction);
-                Debug.Log("position = " + transform.position);
-                Debug.Log("Perpendicular Vector = " + perpendicular + ", m_dir = " + m_direction + ", transform.up = " + transform.up);
-
                 transform.Rotate(perpendicular, 90, Space.World);
-
-                /*
-                if (m_direction != Vector3.up && m_direction * -1 != Vector3.up) {
-                    //Change the orientation to be world up, but where tr                transform up is set to whatever direction we were last going in
-                    transform.LookAt(transform.position + Vector3.up, m_direction);
-                } else {
-                    transform.LookAt(transform.position + Vector3.forward, m_direction);
-                }
-                */
-                //Debug.Log("pos  = " + transform.position + ", up*-1 = " + (transform.up * -1) + ", dir = " + m_direction + ", m_dest = " + m_dest);
             }
-
         }
         m_direction = (m_dest - transform.position).normalized;
-
         //Move closer to Destination
         Vector3 p = Vector3.MoveTowards(transform.position, m_dest, m_speed);
         GetComponent<Rigidbody>().MovePosition(p);
@@ -77,10 +55,8 @@ public class PacmanMove3D : MonoBehaviour {
         RaycastHit hit;
 
         if (Physics.Raycast(pos, dir, out hit, 1.0f, m_wallLayer)) {
-            //print("Found an object - distance: " + hit.distance + ", name is " + hit.collider.tag);
             return (hit.collider.tag != "Wall");
         } else {
-
             return true;
         }
     }

@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour {
 
     void EatDot() {
         totalScore += dotScore;
-        scoreText.text = totalScore.ToString();
+        //scoreText.text = totalScore.ToString();
         dotsRemaining--;
         if (dotsRemaining <= 0) {
             Debug.Log("All Dots Eaten");
